@@ -52,7 +52,7 @@ Button {
             opacity:
             if(enabled){
                 if(btnText.hovered){
-                    if(btnText.down){1}else{0.5}
+                    if(btnText.down){1}else{0.8}
                 }else{1}
             }else{if(backgroundVisible){1}else{0.7}}
 

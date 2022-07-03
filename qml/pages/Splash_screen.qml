@@ -263,10 +263,6 @@ Window {
             animation_finsish_left.running = true
             animation_finsish_right.running = true
         }
-    }
-
-    Connections{
-        target: backend
 
         function onSend_theme_info_signal(info_theme){
 

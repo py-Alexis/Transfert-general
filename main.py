@@ -111,6 +111,38 @@ class MainWindow(QObject):
         print("wait")
         self.send_show_window_signal.emit()
 
+    send_theme_info_signal = Signal("QVariant", str)
+    @Slot(str)
+    def change_theme(self, theme_name):
+        """
+        Send the colors of the theme.
+        And change the active theme in settings.json
+        """
+
+        # get the colors of the theme
+        with open("Settings/Themes/" + theme_name + ".json", "r") as f:
+            theme_dict = eval(f.read())
+        self.send_theme_info_signal.emit(theme_dict, theme_name)  # send the colors of the theme
+
+        # change the active theme in settings.json
+        with open("Settings/settings.json", "r") as f:
+            settings = json.load(f)
+            settings["Active Theme"] = theme_name
+        print(theme_name)
+        with open("Settings/settings.json", "w") as f:
+            json.dump(settings, f, indent=4)
+
+    send_theme_list_signal = Signal("QVariant")
+    def send_theme_list(self):
+        """
+        Send the list of available themes.
+        """
+        liste = os.listdir("Settings/Themes")
+
+        # remove .json extension
+        liste = [x[:-5] for x in liste]
+
+        self.send_theme_list_signal.emit(liste)
 
 
 if __name__ == "__main__":
@@ -133,8 +165,9 @@ if __name__ == "__main__":
     # main window
     main = MainWindow()
     engine.rootContext().setContextProperty("main", main)
-
     engine.load(os.path.join(os.path.dirname(__file__), "qml/main.qml"))
+    main.change_theme(get_active_them())
+    main.send_theme_list()
 
     if not engine.rootObjects():
         sys.exit(-1)
