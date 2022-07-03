@@ -1,0 +1,13 @@
+{
+    "Background": "#fffffe",
+    "BackgroundDark": "#eff0f4",
+
+    "Headline": "#0d0d0d",
+    "Paragraph": "#434343",
+
+    "Highlight": "#ff8e3c",
+    "Secondary": "#eff0f3",
+    "Tertiary": "#d9376e",
+
+    "Stroke": "#0d0d0d",
+}

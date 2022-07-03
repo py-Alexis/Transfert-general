@@ -3,6 +3,7 @@ import QtQuick.Window 2.13
 import QtQuick.Controls 2.13
 import QtGraphicalEffects 1.13
 import "controls"
+import "controls/button"
 import "pages"
 
 Window {
@@ -31,19 +32,94 @@ Window {
     id: mainWindow
     width: 1000
     height: 580
-    visible: true
+    visible: false
+    color: colorBackground
     title: qsTr("Transfert général")
+
 
     Rectangle {
         id: appContainer
         color: colorBackground
-        anchors.fill: parent
+        anchors.left: parent.left
+        anchors.right: settingsLeftPanel.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.rightMargin: 20
         anchors.bottomMargin: 30
+    }
+
+    UI_iconButton{
+        id: settings_button
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.topMargin: 11
+        anchors.rightMargin: 5
+
+        iconColor: colorParagraph
+        iconPath: "../../../images/svg_images/settings.svg"
+        buttonSize: 35
+        backgroundVisible: false
+        z:2
+
+        onClicked: {
+            animationSettingsPannel.running = true;
+            animationSettingsButton.running = true
+            if(settings_button.iconColor == colorParagraph){
+                settings_button.iconColor = colorHighlight
+            }else{
+                settings_button.iconColor = colorParagraph
+            }
+        }
+
+        PropertyAnimation{
+            id: animationSettingsButton
+            target: settings_button
+            property: "anchors.rightMargin"
+            to: if(settings_button.anchors.rightMargin === 5) return 200; else return 5
+            duration: 1000
+            easing.type: Easing.InOutQuint
+        }
+    }
+
+    Rectangle {
+        id: settingsLeftPanel
+        width: 0
+        color: colorBackgroundDark
+        radius: 20
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: bottomBar.top
+        anchors.bottomMargin: 30
+        anchors.rightMargin: -20
+        anchors.topMargin: 5
+        z:1
+
+        PropertyAnimation{
+            id: animationSettingsPannel
+            target: settingsLeftPanel
+            property: "width"
+            to: if(settingsLeftPanel.width === 0) return 260; else return 0
+            duration: 1000
+            easing.type: Easing.InOutQuint
+        }
+
+    }
+    DropShadow{
+        id: dropShadow
+        horizontalOffset: 0
+        verticalOffset: 0
+        radius: 10
+        anchors.fill: settingsLeftPanel
+        samples: 16
+        color: "#80000000"
+        source: settingsLeftPanel
+        visible: true
     }
 
     Rectangle {
         id: bottomBar
         width: 200
+        height: 30
         color: colorBackgroundDark
         anchors.left: parent.left
         anchors.right: parent.right
@@ -75,9 +151,7 @@ Window {
                     id: gitHubLogo
 
                     anchors.fill: parent
-
                     source: "../images/svg_images/github.svg"
-
                     visible: true
                 }
 
@@ -106,15 +180,21 @@ Window {
         }
     }
 
+
     Connections{
-        target: backend
+        target: main
+
+        function onSend_show_window_signal(){
+            mainWindow.visible = true
+        }
     }
+
 }
 
 
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.9}
+    D{i:0;formeditorZoom:0.9}D{i:1}
 }
 ##^##*/
