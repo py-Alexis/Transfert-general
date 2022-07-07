@@ -28,6 +28,8 @@ Window {
     property color colorStroke: "#010101"
     ColorAnimation on colorStroke {id: colorStrokeAnimation; to: colorStroke; duration: 1000 ; running: false; onFinished: tab_button_clickable = true}
     // --------------------------------------------
+    // When company mode is enabled, you can access the settings via the settings button and you can't change
+    // any of the backup paths.
     property bool company_mode: false
 
     property bool tab_button_clickable: true
@@ -64,6 +66,31 @@ Window {
         anchors.bottom: parent.bottom
         anchors.rightMargin: 20
         anchors.bottomMargin: 30
+
+        StackView {
+            id: stackView
+            anchors.fill: parent
+            initialItem: Qt.resolvedUrl("pages/Home_page.qml")
+            clip: true
+
+//            replaceEnter: Transition {
+//                XAnimator {
+//                    from: if(stackViewDirection){stackView.width}else{-stackView.width}
+//                    to: 0
+//                    duration: if(stackViewAnimation){850}else{0}
+//                    easing.type: Easing.InOutQuint
+//                }
+//            }
+//
+//            replaceExit: Transition {
+//                XAnimator {
+//                    from: 0
+//                    to: if(stackViewDirection){-stackView.width}else{stackView.width}
+//                    duration: if(stackViewAnimation){850}else{0}
+//                    easing.type: Easing.InOutQuint
+//                }
+//            }
+        }
     }
 
     UI_iconButton{
@@ -72,13 +99,22 @@ Window {
         anchors.top: parent.top
         anchors.topMargin: 11
         anchors.rightMargin: 5
-        visible: !company_mode
+
+        visible: !company_mode  // If company mode is enabled, the settings button is not visible.
 
         iconColor: settingsLeftPanel.width === 260 ? colorHighlight: colorParagraph
         iconPath: "../../../images/svg_images/settings.svg"
         buttonSize: 30
         backgroundVisible: false
         z:2
+
+        Shortcut {
+            sequence: "Ctrl+P"
+            onActivated: {
+                animationSettingsPannel.running = true;
+                animationSettingsButton.running = true
+            }
+        }
 
         onClicked: {
             animationSettingsPannel.running = true;
@@ -260,6 +296,10 @@ Window {
 
             colorStrokeAnimation.to = info_theme["Stroke"]
             colorStrokeAnimation.running = true
+        }
+
+        function onSend_settings_signal(entreprise_mode){
+            company_mode = entreprise_mode
         }
     }
 }

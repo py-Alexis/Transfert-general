@@ -98,10 +98,14 @@ class MainWindow(QObject):
     def __init__(self):
         QObject.__init__(self)
 
+    def startup(self):
+        self.change_theme(get_active_them())
+        self.send_theme_list()
+        self.send_settings()
+
     @Slot()
     def open_github(self):
         webbrowser.open('https://github.com/py-Alexis/Transfert-general', new=2)
-
 
     send_show_window_signal = Signal()
     @Slot()
@@ -144,6 +148,17 @@ class MainWindow(QObject):
 
         self.send_theme_list_signal.emit(liste)
 
+    send_settings_signal = Signal(bool)
+    def send_settings(self):
+        """
+        Send the settings.
+        ["compagny_mode"]
+        """
+        with open("Settings/settings.json", "r") as f:
+            settings = json.load(f)
+        print(settings)
+        self.send_settings_signal.emit(settings["company_mode"])
+
 
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)
@@ -166,8 +181,7 @@ if __name__ == "__main__":
     main = MainWindow()
     engine.rootContext().setContextProperty("main", main)
     engine.load(os.path.join(os.path.dirname(__file__), "qml/main.qml"))
-    main.change_theme(get_active_them())
-    main.send_theme_list()
+    main.startup()
 
     if not engine.rootObjects():
         sys.exit(-1)
