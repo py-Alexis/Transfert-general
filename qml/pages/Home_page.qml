@@ -1,6 +1,6 @@
 import QtQuick 2.13
 import QtQuick.Window 2.13
-import QtQuick.Controls 2.13
+import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.13
 import "../controls"
 import "../controls/button"
@@ -58,6 +58,59 @@ Rectangle {
         font.pointSize: 22
     }
 
+    Rectangle {
+        id: listview
+        color: "#00000000"
+        anchors.top: rectangle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: validate_btn.top
+        anchors.bottomMargin: 30
+        anchors.leftMargin: 30
+        anchors.rightMargin: 30
+
+
+       
+    }
+
+    UI_textButton {
+        id: validate_btn
+        textBtn: "Validate"
+        textColor: colorHeadline
+        backgroundColor: colorHighlight
+        emphasis: true
+
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.rightMargin: 30
+        anchors.bottomMargin: 20
+
+    }
+
+    DropShadow{
+        id: dropShadow
+        horizontalOffset: 2
+        verticalOffset: 2
+        radius: 10
+        anchors.fill: validate_btn
+        samples: 16
+        color: "#80000000"
+        source: validate_btn
+        visible: true
+    }
+
+    UI_textButton {
+        id: select_all_btn
+        textBtn: "Select all"
+        textColor: colorHeadline
+        backgroundColor: colorBackground
+        emphasis: false
+
+        anchors.right: validate_btn.left
+        anchors.bottom: parent.bottom
+        anchors.rightMargin: 20
+        anchors.bottomMargin: 20
+    }
 }
 
 /*##^##
