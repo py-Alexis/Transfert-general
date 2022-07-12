@@ -4,6 +4,7 @@ import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.13
 import "../controls"
 import "../controls/button"
+import "../controls/Home_page"
 import "../pages"
 import "../"
 
@@ -43,7 +44,7 @@ Rectangle {
         anchors.leftMargin: 40
         anchors.bottomMargin: 5
         font.bold: true
-        font.pointSize: 22
+        font.pointSize: 27
 
     }
 
@@ -55,7 +56,7 @@ Rectangle {
         anchors.bottom: rectangle.top
         anchors.bottomMargin: 5
         anchors.leftMargin: 0
-        font.pointSize: 22
+        font.pointSize: 27
     }
 
     Rectangle {
@@ -70,7 +71,34 @@ Rectangle {
         anchors.rightMargin: 30
 
 
-       
+        ScrollView {
+            id: settingsScrollView
+            anchors.fill: parent
+            clip: true
+
+            Column {
+                id: settingsColumn
+                anchors.fill: parent
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.topMargin: spacing
+                spacing: 10
+
+                Selection{
+                    anchors.left: settingsColumn.left
+                    width: settingsScrollView.width
+                    name: "123456789101112131415161718192021222324"
+                }
+                Selection{
+                    anchors.left: settingsColumn.left
+                    width: settingsScrollView.width
+                }
+                Selection{
+                    anchors.left: settingsColumn.left
+                    width: settingsScrollView.width
+                }
+            }
+        }
     }
 
     UI_textButton {
@@ -94,7 +122,7 @@ Rectangle {
         radius: 10
         anchors.fill: validate_btn
         samples: 16
-        color: "#80000000"
+        color: "#4d010000"
         source: validate_btn
         visible: true
     }
@@ -115,6 +143,6 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:0.9;height:480;width:640}D{i:2}D{i:3}
+    D{i:0;autoSize:true;formeditorZoom:0.9;height:480;width:640}
 }
 ##^##*/

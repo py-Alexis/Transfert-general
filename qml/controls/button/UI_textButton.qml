@@ -7,6 +7,8 @@ Button {
 
     //CUSTOM PROPERTIES
     property string textBtn: "nouveau"
+
+    property color textColor: "#fffffe"
     property color backgroundColor: "#7f5af0"
 
     property bool emphasis: false

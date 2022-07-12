@@ -17,6 +17,14 @@ Button {
     property bool circle: false
 
 
+    MouseArea
+    {
+        id: mouseArea
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        onPressed:  mouse.accepted = false
+    }
+
     height: buttonSize
     width: buttonSize
 
@@ -52,9 +60,9 @@ Button {
             opacity:
             if(enabled){
                 if(btnText.hovered){
-                    if(btnText.down){1}else{0.8}
+                    if(btnText.down){0.9}else{0.4}
                 }else{1}
-            }else{if(backgroundVisible){1}else{0.7}}
+            }else{if(backgroundVisible){1}else{0.5}}
 
 
             visible: true
