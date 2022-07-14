@@ -84,5 +84,6 @@ def api_get_list_folders():
 
 
 if __name__ == "__main__":
-    for folder in api_get_list_folders():
-        print(folder, api_get_list_folders()[folder])
+    # for folder in api_get_list_folders():
+    #     print(folder, api_get_list_folders()[folder])
+    print(get_dir_size("D:/resource"))

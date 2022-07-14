@@ -28,6 +28,34 @@ Item {
     property string name: "Name"
 
     property bool checked: false
+    onCheckedChanged: {
+        if(checked === true){
+            var index = selections.indexOf(name);
+            if(index === -1){
+                selections.push(name);
+            }
+        }else{
+            var index = selections.indexOf(name);
+            if (index !== -1) {
+                selections.splice(index, 1);
+            }
+//            all_selections.push("randomthig")
+        }
+        internal_home_page.check_selections()
+    }
+    property var selection: []
+    property bool reload_selection: true
+    onReload_selectionChanged: {
+        var index = selections.indexOf(name);
+        if (index !== -1) {
+            checked = true
+        }else{
+            checked = false
+        }
+    }
+
+    property bool destroy: true
+    onDestroyChanged: destroy()
 
     QtObject{
         id: internal

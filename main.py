@@ -27,12 +27,20 @@ class LoadingSequence(QObject):
     percent = Signal(int)
     text = Signal(str)
 
-    def __init__(self):
+    def __init__(self, main_window):
         super().__init__()
+        self.main_window = main_window
 
     def loading(self):
+        #     self.change_theme(get_active_them())
+        #     self.send_theme_list()
+        #     self.send_settings()
+        #     self.get_folders()
+
         self.text.emit('Starting...')
 
+        print(self.main_window)
+        self.main_window.get_folders()
         time.sleep(random.randrange(1, 2))
         self.percent.emit(6)
         time.sleep(random.randrange(1, 2))
@@ -41,9 +49,15 @@ class LoadingSequence(QObject):
         self.percent.emit(39)
 
         self.text.emit('Loading Theme...')
+        self.main_window.change_theme(get_active_them())
+        print("here")
+        self.main_window.send_theme_list()
+        print("no here")
         time.sleep(random.randrange(1, 2))
+
         self.percent.emit(83)
         self.text.emit('Loading Settings...')
+        self.main_window.send_settings()
         time.sleep(random.randrange(1, 2))
         self.percent.emit(100)
 
@@ -55,12 +69,13 @@ class LoadingSequence(QObject):
 
 
 class SlashScreen(QObject):
-    def __init__(self):
+    def __init__(self, main_window):
         QObject.__init__(self)
+        self.main_window = main_window
 
     def init(self):
         self.thread = QThread(self)
-        self.starting_sequence = LoadingSequence()
+        self.starting_sequence = LoadingSequence(self.main_window)
         self.starting_sequence.moveToThread(self.thread)
         self.thread.started.connect(self.starting_sequence.loading)
         self.starting_sequence.finished.connect(self.finish)
@@ -103,13 +118,14 @@ class MainWindow(QObject):
     def __init__(self):
         QObject.__init__(self)
 
-    def startup(self):
-        self.change_theme(get_active_them())
-        self.send_theme_list()
-        self.send_settings()
-        self.get_folders()
+    # def startup(self):
+    #     self.change_theme(get_active_them())
+    #     self.send_theme_list()
+    #     self.send_settings()
+    #     self.get_folders()
 
     send_folders = Signal("QVariant")
+    @Slot()
     def get_folders(self):
         folders = api_get_list_folders()
         for folder in folders:
@@ -182,18 +198,19 @@ if __name__ == "__main__":
     app.setOrganizationDomain("j'ai_pas_de_site.com")
     app.setApplicationName("voca-liste")
 
-    # Loading screen
-    splash = SlashScreen()
-    engine.rootContext().setContextProperty("backend", splash)
-    engine.load(os.path.join(os.path.dirname(__file__), "qml/pages/Splash_screen.qml"))
-    splash.change_theme(get_active_them())
-
     # main window
     main = MainWindow()
     engine.rootContext().setContextProperty("main", main)
     engine.load(os.path.join(os.path.dirname(__file__), "qml/main.qml"))
+
+    # Loading screen
+    splash = SlashScreen(main)
+    engine.rootContext().setContextProperty("backend", splash)
+    engine.load(os.path.join(os.path.dirname(__file__), "qml/pages/Splash_screen.qml"))
+    splash.change_theme(get_active_them())
+
     splash.init()
-    main.startup()
+    # main.startup()
 
     if not engine.rootObjects():
         sys.exit(-1)
