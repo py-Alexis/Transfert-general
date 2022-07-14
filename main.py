@@ -10,6 +10,8 @@ from PySide2.QtCore import QObject, Slot, Signal, QThread
 from PySide2.QtGui import QGuiApplication, QIcon
 from PySide2.QtQml import QQmlApplicationEngine
 
+from api import api_get_list_folders
+
 
 def get_active_them():
     """
@@ -55,6 +57,8 @@ class LoadingSequence(QObject):
 class SlashScreen(QObject):
     def __init__(self):
         QObject.__init__(self)
+
+    def init(self):
         self.thread = QThread(self)
         self.starting_sequence = LoadingSequence()
         self.starting_sequence.moveToThread(self.thread)
@@ -67,11 +71,11 @@ class SlashScreen(QObject):
     send_finished_signal = Signal()
 
     def finish(self):
-        print("finished")
         self.thread.quit()
         self.send_finished_signal.emit()
 
     send_percent_signal = Signal(int)
+
     def update_percent(self, percent):
         self.send_percent_signal.emit(percent)
 
@@ -81,6 +85,7 @@ class SlashScreen(QObject):
         self.send_text_signal.emit(text)
 
     send_theme_info_signal = Signal("QVariant")
+
     @Slot(str)
     def change_theme(self, theme_name):
         """
@@ -102,6 +107,16 @@ class MainWindow(QObject):
         self.change_theme(get_active_them())
         self.send_theme_list()
         self.send_settings()
+        self.get_folders()
+
+    send_folders = Signal("QVariant")
+    def get_folders(self):
+        folders = api_get_list_folders()
+        for folder in folders:
+            folders[folder]["from"] = folders[folder]["from"].replace("\\", "/")
+            folders[folder]["to"] = folders[folder]["to"].replace("\\", "/")
+
+        self.send_folders.emit(folders)
 
     @Slot()
     def open_github(self):
@@ -110,9 +125,7 @@ class MainWindow(QObject):
     send_show_window_signal = Signal()
     @Slot()
     def show_main_window(self):
-        print("wait")
         time.sleep(1)
-        print("wait")
         self.send_show_window_signal.emit()
 
     send_theme_info_signal = Signal("QVariant", str)
@@ -132,7 +145,6 @@ class MainWindow(QObject):
         with open("Settings/settings.json", "r") as f:
             settings = json.load(f)
             settings["Active Theme"] = theme_name
-        print(theme_name)
         with open("Settings/settings.json", "w") as f:
             json.dump(settings, f, indent=4)
 
@@ -156,7 +168,6 @@ class MainWindow(QObject):
         """
         with open("Settings/settings.json", "r") as f:
             settings = json.load(f)
-        print(settings)
         self.send_settings_signal.emit(settings["company_mode"])
 
 
@@ -181,6 +192,7 @@ if __name__ == "__main__":
     main = MainWindow()
     engine.rootContext().setContextProperty("main", main)
     engine.load(os.path.join(os.path.dirname(__file__), "qml/main.qml"))
+    splash.init()
     main.startup()
 
     if not engine.rootObjects():

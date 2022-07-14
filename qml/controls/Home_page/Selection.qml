@@ -18,7 +18,12 @@ Item {
 //    property color colorStroke: "#010101"
 
     property string from_path: "from_path"
-    property string to_path: "to_path"
+    property bool from_path_is_valide: true
+    property string to_path: "D:/backup/ressources"
+    property bool to_path_is_valide: true
+    property string data_size: "1GB"
+    property string data_size_to_copy: "200MB"
+    property string data_last_copy: "1 hour ago"
 
     property string name: "Name"
 
@@ -147,7 +152,7 @@ Item {
             Label {
                 id: from_path_label
                 color: colorParagraph
-                text: "D:\\cours\\PTSI"
+                text: from_path
                 anchors.right: separator.left
                 anchors.top: parent.top
                 anchors.rightMargin: 20
@@ -185,7 +190,7 @@ Item {
                 anchors.bottomMargin: (parent.height - height*2)/3
                 font.pointSize: 13
 
-                text: "D:\\resource\\test"
+                text: to_path
                 anchors.right: separator.left
 
                 color: colorParagraph
@@ -257,7 +262,7 @@ Item {
                 anchors.left: size.right
                 anchors.leftMargin: 5
 
-                text: "1.3 GB"
+                text: data_size
                 color: colorParagraph
                 font.pointSize: 10
             }
@@ -269,7 +274,7 @@ Item {
                 anchors.left: size_to_copy.right
                 anchors.leftMargin: 5
 
-                text: "235 MB"
+                text: data_size_to_copy
                 color: colorParagraph
                 font.pointSize: 10
             }
@@ -281,7 +286,7 @@ Item {
                 anchors.left: last_copy.right
                 anchors.leftMargin: 5
 
-                text: "25/02/22"
+                text: data_last_copy
                 color: colorParagraph
                 font.pointSize: 10
             }

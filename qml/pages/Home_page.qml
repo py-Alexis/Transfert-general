@@ -72,31 +72,17 @@ Rectangle {
 
 
         ScrollView {
-            id: settingsScrollView
+            id: selectionScrollView
             anchors.fill: parent
             clip: true
 
             Column {
-                id: settingsColumn
+                id: selectionColumn
                 anchors.fill: parent
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.topMargin: spacing
                 spacing: 10
-
-                Selection{
-                    anchors.left: settingsColumn.left
-                    width: settingsScrollView.width
-                    name: "123456789101112131415161718192021222324"
-                }
-                Selection{
-                    anchors.left: settingsColumn.left
-                    width: settingsScrollView.width
-                }
-                Selection{
-                    anchors.left: settingsColumn.left
-                    width: settingsScrollView.width
-                }
             }
         }
     }
@@ -138,6 +124,21 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.rightMargin: 20
         anchors.bottomMargin: 20
+    }
+
+    Connections {
+        target: main
+
+        function onSend_folders(folders){
+
+            for (const [key, value] of Object.entries(folders)) {
+                var selection = `Selection{anchors.left: selectionColumn.left; width: selectionScrollView.width; name: "${key}"; from_path: "${value['from']}"; to_path: "${value['to']}"; data_size: "${value['size']}"; data_size_to_copy: "${value['size_to_copy']}"; data_last_copy: "${value['last_copy']}";}`
+                var objectString = `import QtQuick 2.0; import QtQuick.Controls 2.13;import "../controls/Home_page"; ${selection}`;
+
+
+                var newObject = Qt.createQmlObject(objectString, selectionColumn, "selections");
+            }
+        }
     }
 }
 

@@ -152,7 +152,6 @@ Window {
             duration: 1000
             easing.type: Easing.InOutQuint
             onFinished: {
-                console.log(themeSelector.anchors.leftMargin)
             }
         }
 
@@ -262,7 +261,6 @@ Window {
         function onSend_theme_list_signal(list_theme){
             // for each theme in list_theme add a tab button in the tabbar with the theme name
             for(var i = 0; i < list_theme.length; i++){
-                console.log(i)
                 internal.createSettingsTarButton(list_theme[i], themeName)
             }
             temporaryButton.destroy()
