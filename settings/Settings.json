@@ -2,5 +2,5 @@
     "Active Theme": "DefaultLight",
     "Custom Top Bar": true,
     "StackView animation": true,
-    "company_mode": false
+    "company_mode": true
 }

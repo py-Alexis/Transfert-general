@@ -18,9 +18,9 @@ Item {
 //    property color colorStroke: "#010101"
 
     property string from_path: "from_path"
-    property bool from_path_is_valide: true
+    property bool from_path_is_valid: true
     property string to_path: "D:/backup/ressources"
-    property bool to_path_is_valide: true
+    property bool to_path_is_valid: true
     property string data_size: "1GB"
     property string data_size_to_copy: "200MB"
     property string data_last_copy: "1 hour ago"
@@ -32,10 +32,12 @@ Item {
     QtObject{
         id: internal
 
-        property bool compact: if((background_rectangle.width - (name_label.width + from_path_label.width)) > (940-550) ||(background_rectangle.width - (name_label.width + from_path_label.width)) > (940-550) ){true}else{false}
+        property bool compact: if((background_rectangle.width - (name_label.width + from_path_label.width)) > (980-550) ||(background_rectangle.width - (name_label.width + from_path_label.width)) > (940-550) ){true}else{false}
+        property bool is_valid: if(from_path_is_valid && to_path_is_valid){true}else{false}
     }
 
     height: 80
+    opacity: internal.is_valid ? 1 : 0.5
 
     Rectangle{
         id: background_rectangle
@@ -46,7 +48,7 @@ Item {
         anchors.bottomMargin: 0.11
 
         visible: if(mouse_area.pressed){false}else{true}
-        opacity: if(button.hovered){0.7}else{1}
+        opacity: if(internal.is_valid){if(button.hovered){0.7}else{1}}else{1}
         color: if(checked){colorHighlight}else{colorBackgroundDark}
         radius: 20
 
@@ -121,7 +123,7 @@ Item {
             anchors.top: parent.top
             anchors.topMargin: 0
             anchors.bottom: parent.bottom
-            anchors.rightMargin: if(internal.compact){230}else{30}
+            anchors.rightMargin: if(!company_mode){if(internal.compact){220}else{30}}else{if(internal.compact){190}else{0}}
 
             Label{
                 id: from_label
@@ -158,6 +160,8 @@ Item {
                 anchors.rightMargin: 20
                 font.pointSize: 13
                 anchors.topMargin: (parent.height - height*2)/3
+                font.strikeout: if(from_path_is_valid){false}else{true}
+
             }
             Rectangle{
                 id: to_path_rectangle
@@ -194,6 +198,7 @@ Item {
                 anchors.right: separator.left
 
                 color: colorParagraph
+                font.strikeout: if(to_path_is_valid){false}else{true}
             }
             Rectangle{
                 id: separator
@@ -304,8 +309,8 @@ Item {
         id: mouse_area
 
         anchors.fill: parent
-
-        cursorShape: Qt.PointingHandCursor
+        enabled: internal.is_valid
+        cursorShape: if(internal.is_valid){Qt.PointingHandCursor}else{Qt.ArrowCursor}
         onClicked: checked = !checked
     }
     UI_iconButton{
@@ -321,9 +326,9 @@ Item {
 
         iconColor: colorParagraph
         backgroundVisible: false
+        visible: !company_mode
 
         onClicked: console.log((background_rectangle.width - (name_label.width + from_path_label.width)))
-
 
     }
     UI_iconButton{
@@ -339,9 +344,9 @@ Item {
 
         iconColor: colorParagraph
         backgroundVisible: false
+        visible: !company_mode
 
         onClicked: console.log((background_rectangle.width - (name_label.width + from_path_label.width)) < (940-550) ||(background_rectangle.width - (name_label.width + from_path_label.width)) < (940-550) )
-
 
 
     }

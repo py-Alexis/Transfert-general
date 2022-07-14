@@ -132,7 +132,7 @@ Rectangle {
         function onSend_folders(folders){
 
             for (const [key, value] of Object.entries(folders)) {
-                var selection = `Selection{anchors.left: selectionColumn.left; width: selectionScrollView.width; name: "${key}"; from_path: "${value['from']}"; to_path: "${value['to']}"; data_size: "${value['size']}"; data_size_to_copy: "${value['size_to_copy']}"; data_last_copy: "${value['last_copy']}";}`
+                var selection = `Selection{anchors.left: selectionColumn.left; width: selectionScrollView.width; name: "${key}"; from_path: "${value['from']}"; to_path: "${value['to']}"; data_size: "${value['size']}"; data_size_to_copy: "${value['size_to_copy']}"; data_last_copy: "${value['last_copy']}"; from_path_is_valid: ${value['from_valid']}; to_path_is_valid: ${value['to_valid']};}`
                 var objectString = `import QtQuick 2.0; import QtQuick.Controls 2.13;import "../controls/Home_page"; ${selection}`;
 
 

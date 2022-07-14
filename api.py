@@ -60,8 +60,6 @@ def api_get_list_folders():
         else:
             folders[folder]["to_valid"] = False
 
-
-
     # add size to copy key
     for folder in folders:
         folders[folder]["size_to_copy"] = "soon..."
@@ -70,6 +68,17 @@ def api_get_list_folders():
     for folder in folders:
         if not "last_copy" in folders[folder]:
             folders[folder]["last_copy"] = "Jamais"
+
+    # put the unvalid folders at the end of the dict
+    folders_unvalid = {}
+    keys = list(folders.keys())
+    for folder in keys:
+        if folders[folder]["from_valid"] is False or folders[folder]["to_valid"] is False:
+            folders_unvalid[folder] = folders[folder]
+            # delete folder key
+            del folders[folder]
+
+    folders.update(folders_unvalid)
 
     return folders
 

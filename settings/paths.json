@@ -1,6 +1,6 @@
 {
+  "Ressources": {"from":  "D:\\resource", "to": "D:\\backup\\ressources"},
   "Cours": {"from":  "D:\\cours", "to": "D:\\backup\\cours"},
-  "Perso": {"from":  "D:\\perso", "to": "D:\\backup\\perso"},
-  "Ressources": {"from":  "D:\\resource", "to": "D:\\backup\\ressources"}
+  "Perso": {"from":  "D:\\perso", "to": "D:\\backup\\perso"}
 
 }

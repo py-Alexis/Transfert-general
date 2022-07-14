@@ -21,7 +21,7 @@ Button {
     {
         id: mouseArea
         anchors.fill: parent
-        cursorShape: Qt.PointingHandCursor
+        cursorShape: if(enabled){Qt.PointingHandCursor}else{Qt.ArrowCursor}
         onPressed:  mouse.accepted = false
     }
 
@@ -62,7 +62,7 @@ Button {
                 if(btnText.hovered){
                     if(btnText.down){0.9}else{0.4}
                 }else{1}
-            }else{if(backgroundVisible){1}else{0.5}}
+            }else{if(backgroundVisible){1}else{1}}
 
 
             visible: true

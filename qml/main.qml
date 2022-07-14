@@ -115,7 +115,14 @@ Window {
                 animationSettingsButton.running = true
             }
         }
+        Shortcut{
+            sequence: "Ctrl+Shift+P"
 
+            onActivated: {
+                company_mode = !company_mode
+                console.log(company_mode)
+            }
+        }
         onClicked: {
             animationSettingsPannel.running = true;
             animationSettingsButton.running = true
