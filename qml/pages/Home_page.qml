@@ -46,9 +46,9 @@ Rectangle {
         function check_selections(){
             if(selections.length === all_selections.length){
 
-                select_all_btn.textBtn = "Deselect all"
+                select_all_btn.textBtn = "Désélectionner tout"
             }else{
-                select_all_btn.textBtn = "Select all"
+                select_all_btn.textBtn = "Sélectionner tout"
             }
         }
     }
@@ -91,7 +91,7 @@ Rectangle {
     Label {
         id: to_backup
         color: colorHeadline
-        text: "to backup"
+        text: "à copier"
         anchors.left: copy_size.right
         anchors.bottom: rectangle.top
         anchors.bottomMargin: 5
@@ -129,10 +129,12 @@ Rectangle {
 
     UI_textButton {
         id: validate_btn
-        textBtn: "Validate"
+        textBtn: "Valider"
         textColor: colorHeadline
         backgroundColor: colorHighlight
         emphasis: true
+        enabled: if(copy_size.text === "Rien "){false}else{true}
+        opacity: if(copy_size.text === "Rien "){0.4}else{1}
 
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -156,17 +158,17 @@ Rectangle {
         samples: 16
         color: "#4d010000"
         source: validate_btn
-        visible: true
-
-
+        visible: if(copy_size.text === "Rien "){false}else{true}
     }
 
     UI_textButton {
         id: select_all_btn
-        textBtn: "Select all"
+        textBtn: "Sélectionner tout"
         textColor: colorHeadline
         backgroundColor: colorBackground
         emphasis: false
+        enabled: if(copy_size.text === "Rien "){false}else{true}
+        opacity: if(copy_size.text === "Rien "){0.5}else{1}
 
         anchors.right: validate_btn.left
         anchors.bottom: parent.bottom
@@ -217,6 +219,13 @@ Rectangle {
 
                     var newObject = Qt.createQmlObject(objectString, selectionColumn, "selections");
                 }
+            }
+        }
+        function onSend_size(size){
+            if(size === "0o "){
+                copy_size.text = "Rien "
+            }else{
+                copy_size.text = size
             }
         }
     }

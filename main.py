@@ -125,14 +125,17 @@ class MainWindow(QObject):
     #     self.get_folders()
 
     send_folders = Signal("QVariant")
+    send_size = Signal(str)
     @Slot()
     def get_folders(self):
-        folders = api_get_list_folders()
+        folders, size = api_get_list_folders()
         for folder in folders:
             folders[folder]["from"] = folders[folder]["from"].replace("\\", "/")
             folders[folder]["to"] = folders[folder]["to"].replace("\\", "/")
 
         self.send_folders.emit(folders)
+        print(size)
+        self.send_size.emit(size + " ")
 
     @Slot()
     def open_github(self):

@@ -35,6 +35,7 @@ def convert_size(byte):
 def api_get_list_folders():
     """
     Return the list folders to backup.
+    and the size that will be backuped.
     """
 
     # read the paths.json file
@@ -48,31 +49,41 @@ def api_get_list_folders():
             folders[folder]["from_valid"] = True
 
             # add size key
-            folders[folder]["size"] = convert_size(get_dir_size(folders[folder]["from"]))
+            folders[folder]["size"] = get_dir_size(folders[folder]["from"])
         else:
             folders[folder]["from_valid"] = False
 
             # add size key
-            folders[folder]["size"] = 0
+            folders[folder]["size"] = "-"
 
         if os.path.exists(folders[folder]["to"]):
             folders[folder]["to_valid"] = True
         else:
             folders[folder]["to_valid"] = False
 
+    total_size_to_copy = 0
     # add size to copy key
     for folder in folders:
-        folders[folder]["size_to_copy"] = "soon..."
+        if folders[folder]["from_valid"] and folders[folder]["to_valid"]:
+            size_to_copy = folders[folder]["size"] - get_dir_size(folders[folder]["to"])
+            total_size_to_copy += size_to_copy
+            folders[folder]["size_to_copy"] = convert_size(size_to_copy)
+        else:
+            folders[folder]["size_to_copy"] = "-"
+
+        if folders[folder]["from_valid"]:
+            folders[folder]["size"] = convert_size(folders[folder]["size"])
 
     # add a last copy key if it has never been copied
     for folder in folders:
-        if not "last_copy" in folders[folder]:
+        if "last_copy" not in folders[folder]:
             folders[folder]["last_copy"] = "Jamais"
 
-    return folders
+    return folders, convert_size(total_size_to_copy)
 
 
 if __name__ == "__main__":
     # for folder in api_get_list_folders():
     #     print(folder, api_get_list_folders()[folder])
-    print(get_dir_size("D:/resource"))
+    folders, size = api_get_list_folders()
+    print(size)
