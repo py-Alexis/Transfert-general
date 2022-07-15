@@ -49,7 +49,7 @@ Window {
 
         function createSettingsTarButton(ButtonName, activeTheme){
             // Creation of the TabButton String
-            var style = "contentItem: Text {color: parent.checked ? colorHeadline :colorParagraph;text: parent.text;font: parent.font;horizontalAlignment: Text.AlignHCenter;verticalAlignment: Text.AlignVCenter;}background: Rectangle{color: parent.checked ? colorHighlight: colorBackground;opacity: parent.down ? 0.75: 1;}"
+            var style = "contentItem: Text {color: parent.checked ? colorHeadline :colorParagraph;text: parent.text;font: parent.font;horizontalAlignment: Text.AlignHCenter;verticalAlignment: Text.AlignVCenter;}background: Rectangle{radius: 6; color: parent.checked ? colorHighlight: colorBackground;opacity: parent.down ? 0.75: 1;}"
             var isActive = ButtonName === activeTheme ? true: false
             var objectString = `import QtQuick 2.0; import QtQuick.Controls 2.13; TabButton {text: qsTr('${ButtonName}');z:2; checkable: tab_button_clickable;width:100; checked: ${isActive}; onClicked: main.change_theme(text); ${style}}`
 
@@ -94,6 +94,9 @@ Window {
     }
 
     UI_iconButton{
+        property color color_button: colorBackgroundDark
+        onColor_buttonChanged: {console.log(color_button)}
+
         id: settings_button
         anchors.right: parent.right
         anchors.top: parent.top
@@ -102,7 +105,8 @@ Window {
 
         visible: !company_mode  // If company mode is enabled, the settings button is not visible.
 
-        iconColor: settingsLeftPanel.width === 260 ? colorHighlight: colorParagraph
+//        iconColor: settingsLeftPanel.width === 260 ? colorHighlight: colorParagraph
+        iconColor: settings_button.color_button
         iconPath: "../../../images/svg_images/settings.svg"
         buttonSize: 30
         backgroundVisible: false
@@ -111,6 +115,11 @@ Window {
         Shortcut {
             sequence: "Ctrl+P"
             onActivated: {
+                if(settings_button.anchors.rightMargin === 5){
+                    colorAnimationOpening.running = true;
+                }else{
+                    colorAnimationFolding.running = true;
+                }
                 animationSettingsPannel.running = true;
                 animationSettingsButton.running = true
             }
@@ -124,6 +133,12 @@ Window {
             }
         }
         onClicked: {
+        console.log(settings_button.anchors.rightMargin)
+            if(settings_button.anchors.rightMargin === 5){
+                colorAnimationOpening.running = true;
+            }else{
+                colorAnimationFolding.running = true;
+            }
             animationSettingsPannel.running = true;
             animationSettingsButton.running = true
         }
@@ -135,6 +150,15 @@ Window {
             to: if(settings_button.anchors.rightMargin === 5) return 210; else return 5
             duration: 1000
             easing.type: Easing.InOutQuint
+        }
+        ColorAnimation on color_button{
+            id: colorAnimationFolding; to: colorParagraph; duration: 1000 ; running: false; onFinished: settings_button.color_button = colorParagraph; easing.type: Easing.InOutQuint
+        }
+        ColorAnimation on color_button{
+            id: colorAnimationOpening; to: colorHighlight; duration: 1000 ; running: false; onFinished: settings_button.color_button = colorHighlight; easing.type: Easing.InOutQuint
+        }
+        ColorAnimation on color_button{
+            id: colorAnimationChanging; to: colorHighlight; duration: 1000 ; running: false; onFinished: settings_button.color_button = colorHighlight; easing.type: Easing.InOutQuint
         }
     }
 
@@ -301,6 +325,13 @@ Window {
 
             colorStrokeAnimation.to = info_theme["Stroke"]
             colorStrokeAnimation.running = true
+
+            if(settings_button.anchors.rightMargin === 5){
+                settings_button.color_button = info_theme["Paragraph"]
+            }else{
+                colorAnimationChanging.to = info_theme["Highlight"]
+                colorAnimationChanging.running = true
+            }
         }
 
         function onSend_settings_signal(entreprise_mode){

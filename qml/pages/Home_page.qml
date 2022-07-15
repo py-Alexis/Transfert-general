@@ -23,8 +23,6 @@ Rectangle {
     property bool reload_selections: true
     property bool destroy_selections: true
     property var selections: []
-    onSelectionsChanged:{
-    }
     property var all_selections: []
     Shortcut{
         sequence: "Ctrl+N"
@@ -44,6 +42,11 @@ Rectangle {
             internal_home_page.check_selections()
         }
         function check_selections(){
+            if(selections.length === 0){
+                validate_btn.something_to_copy = false
+            }else{
+                validate_btn.something_to_copy = true
+            }
             if(selections.length === all_selections.length){
 
                 select_all_btn.textBtn = "Désélectionner tout"
@@ -129,12 +132,15 @@ Rectangle {
 
     UI_textButton {
         id: validate_btn
+
+        property bool something_to_copy: false
+
         textBtn: "Valider"
         textColor: colorHeadline
         backgroundColor: colorHighlight
         emphasis: true
-        enabled: if(copy_size.text === "Rien "){false}else{true}
-        opacity: if(copy_size.text === "Rien "){0.4}else{1}
+        enabled: if(copy_size.text === "Rien " || !something_to_copy){false}else{true}
+        opacity: if(!enabled){0.4}else{1}
 
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -158,7 +164,7 @@ Rectangle {
         samples: 16
         color: "#4d010000"
         source: validate_btn
-        visible: if(copy_size.text === "Rien "){false}else{true}
+        visible: if(!validate_btn.enabled){false}else{true}
     }
 
     UI_textButton {
