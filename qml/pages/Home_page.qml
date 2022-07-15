@@ -202,13 +202,21 @@ Rectangle {
             for (const [key, value] of Object.entries(folders)) {
                 if(value["from_valid"] === true && value["to_valid"] === true){
                     all_selections.push(key)
-                }
-
                 var selection = `Selection{anchors.left: selectionColumn.left; width: selectionScrollView.width; name: "${key}"; from_path: "${value['from']}"; to_path: "${value['to']}"; data_size: "${value['size']}"; data_size_to_copy: "${value['size_to_copy']}"; data_last_copy: "${value['last_copy']}"; from_path_is_valid: ${value['from_valid']}; to_path_is_valid: ${value['to_valid']}; destroy: destroy_selections;selection: selections;reload_selection: reload_selections;}`
                 var objectString = `import QtQuick 2.0; import QtQuick.Controls 2.13;import "../controls/Home_page"; ${selection}`;
 
 
                 var newObject = Qt.createQmlObject(objectString, selectionColumn, "selections");
+                }
+            }
+            for (const [key, value] of Object.entries(folders)) {
+                if(value["from_valid"] !== true || value["to_valid"] !== true){
+                    var selection = `Selection{anchors.left: selectionColumn.left; width: selectionScrollView.width; name: "${key}"; from_path: "${value['from']}"; to_path: "${value['to']}"; data_size: "${value['size']}"; data_size_to_copy: "${value['size_to_copy']}"; data_last_copy: "${value['last_copy']}"; from_path_is_valid: ${value['from_valid']}; to_path_is_valid: ${value['to_valid']}; destroy: destroy_selections;selection: selections;reload_selection: reload_selections;}`
+                    var objectString = `import QtQuick 2.0; import QtQuick.Controls 2.13;import "../controls/Home_page"; ${selection}`;
+
+
+                    var newObject = Qt.createQmlObject(objectString, selectionColumn, "selections");
+                }
             }
         }
     }
