@@ -51,7 +51,7 @@ class LoadingSequence(QObject):
         # self.text.emit('Loading Theme...')
         self.main_window.change_theme(get_active_them())
         # print("here")
-        # self.main_window.send_theme_list()
+        self.main_window.send_theme_list()
         # print("no here")
         # time.sleep(random.randrange(1, 2))
         #
@@ -189,8 +189,8 @@ class MainWindow(QObject):
             settings = json.load(f)
         self.send_settings_signal.emit(settings["company_mode"])
 
-    @Slot(str, str, str)
-    def create_path(self, name, from_path, to_path):
+    @Slot(str, str, str, bool)
+    def create_path(self, name, from_path, to_path, modify):
         """
         Create a path in the paths.json file.
         """
@@ -198,14 +198,30 @@ class MainWindow(QObject):
         with open("settings/paths.json", "r", encoding="utf-8") as f:
             paths = json.load(f)
 
-        if name in paths:
+        if name in paths and modify is False:
             return False
 
-        paths[name] = {"from": from_path, "to": to_path}
+        paths[name] = {"from": from_path.replace('/', '\\'), "to": to_path.replace('/', '\\')}
 
         with open("settings/paths.json", "w", encoding="utf-8") as f:
             json.dump(paths, f, indent=4)
 
+    @Slot(str)
+    def delete_path(self, name):
+        """
+        Delete a path in the paths.json file.
+        """
+
+        with open("settings/paths.json", "r", encoding="utf-8") as f:
+            paths = json.load(f)
+
+        if name not in paths:
+            return False
+
+        del paths[name]
+
+        with open("settings/paths.json", "w", encoding="utf-8") as f:
+            json.dump(paths, f, indent=4)
 
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)

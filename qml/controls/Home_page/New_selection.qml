@@ -311,13 +311,18 @@ Item {
                 anchors.bottomMargin: 20
 
                 onClicked: {
-                    main.create_path(name_textfield.text, from_textfield.text, to_textfield.text)
-                    internal_home_page.destroy_and_reload_selections()
+                    // if the name is not in the all_selections list create a selection
+                    if(!all_selections.includes(name_textfield.text)){
+                        main.create_path(name_textfield.text, from_textfield.text, to_textfield.text, false)
+                        internal_home_page.destroy_and_reload_selections()
 
-                    new_selection_dialog.reject()
-                    name_textfield.text = ""
-                    from_textfield.text = ""
-                    to_textfield.text = ""
+                        new_selection_dialog.reject()
+                        name_textfield.text = ""
+                        from_textfield.text = ""
+                        to_textfield.text = ""
+                    }else{
+                        // todo : if the name is in the all_selections list, ask the user if he wants to overwrite the selection
+                    }
                 }
             }
             DropShadow{
