@@ -118,6 +118,7 @@ Rectangle {
             id: selectionScrollView
             anchors.fill: parent
             clip: true
+            ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 
             Column {
                 id: selectionColumn
@@ -211,7 +212,7 @@ Rectangle {
                 if(value["from_valid"] === true && value["to_valid"] === true){
                     all_selections.push(key)
                 var selection = `Selection{anchors.left: selectionColumn.left; width: selectionScrollView.width; name: "${key}"; from_path: "${value['from']}"; to_path: "${value['to']}"; data_size: "${value['size']}"; data_size_to_copy: "${value['size_to_copy']}"; data_last_copy: "${value['last_copy']}"; from_path_is_valid: ${value['from_valid']}; to_path_is_valid: ${value['to_valid']}; destroy: destroy_selections;selection: selections;reload_selection: reload_selections;}`
-                var objectString = `import QtQuick 2.0; import QtQuick.Controls 2.13;import "../controls/Home_page"; ${selection}`;
+                var objectString = `import QtQuick 2.0; import QtQuick.Controls 2.13;import "../controls/home_page"; ${selection}`;
 
 
                 var newObject = Qt.createQmlObject(objectString, selectionColumn, "selections");
@@ -226,6 +227,9 @@ Rectangle {
                     var newObject = Qt.createQmlObject(objectString, selectionColumn, "selections");
                 }
             }
+
+            var new_selection = "import QtQuick 2.0; import '../controls/home_page'; New_selection{anchors.left: selectionColumn.left; width: selectionScrollView.width; destroy: destroy_selections}"
+            var newObject = Qt.createQmlObject(new_selection, selectionColumn, "new_selections");
         }
         function onSend_size(size){
             if(size === "0o "){

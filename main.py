@@ -42,23 +42,23 @@ class LoadingSequence(QObject):
         print(self.main_window)
         self.main_window.get_folders()
         time.sleep(random.randrange(1, 2))
-        self.percent.emit(6)
-        time.sleep(random.randrange(1, 2))
-        self.percent.emit(16)
-        time.sleep(random.randrange(1, 2))
-        self.percent.emit(39)
-
-        self.text.emit('Loading Theme...')
+        # self.percent.emit(6)
+        # time.sleep(random.randrange(1, 2))
+        # self.percent.emit(16)
+        # time.sleep(random.randrange(1, 2))
+        # self.percent.emit(39)
+        #
+        # self.text.emit('Loading Theme...')
         self.main_window.change_theme(get_active_them())
-        print("here")
-        self.main_window.send_theme_list()
-        print("no here")
-        time.sleep(random.randrange(1, 2))
-
-        self.percent.emit(83)
-        self.text.emit('Loading Settings...')
-        self.main_window.send_settings()
-        time.sleep(random.randrange(1, 2))
+        # print("here")
+        # self.main_window.send_theme_list()
+        # print("no here")
+        # time.sleep(random.randrange(1, 2))
+        #
+        # self.percent.emit(83)
+        # self.text.emit('Loading Settings...')
+        # self.main_window.send_settings()
+        # time.sleep(random.randrange(1, 2))
         self.percent.emit(100)
 
         self.text.emit('...')
@@ -188,6 +188,23 @@ class MainWindow(QObject):
         with open("Settings/settings.json", "r") as f:
             settings = json.load(f)
         self.send_settings_signal.emit(settings["company_mode"])
+
+    @Slot(str, str, str)
+    def create_path(self, name, from_path, to_path):
+        """
+        Create a path in the paths.json file.
+        """
+
+        with open("settings/paths.json", "r", encoding="utf-8") as f:
+            paths = json.load(f)
+
+        if name in paths:
+            return False
+
+        paths[name] = {"from": from_path, "to": to_path}
+
+        with open("settings/paths.json", "w", encoding="utf-8") as f:
+            json.dump(paths, f, indent=4)
 
 
 if __name__ == "__main__":

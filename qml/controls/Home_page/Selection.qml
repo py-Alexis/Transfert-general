@@ -9,7 +9,7 @@ Item {
 //    property color colorBackgroundDark: "#16161a"
 //
 //    property color colorHeadline: "#fffffe"
-    property color colorParagraph: "#94a1b2"
+//    property color colorParagraph: "#94a1b2"
 //
 //    property color colorHighlight: "#7f5af0"
 //    property color colorSecondary: "#72757e"
@@ -234,7 +234,7 @@ Item {
                 anchors.right: parent.right
                 anchors.rightMargin: -2
                 height: parent.height - 14
-                width: 2
+                width: 2.4
                 color: colorParagraph
                 visible: if(internal.compact){true}else{false}
                 radius: 4

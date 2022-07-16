@@ -52,10 +52,10 @@ Button {
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
 
-            sourceSize.width: width
-            sourceSize.height: width
-            height: width
-            width: if(backgroundVisible){buttonSize - 20}else{buttonSize - 10}
+            sourceSize.width: buttonSize - 10
+            sourceSize.height: buttonSize - 10
+            height: buttonSize - 10
+            width: buttonSize - 10
 
             opacity:
             if(enabled){

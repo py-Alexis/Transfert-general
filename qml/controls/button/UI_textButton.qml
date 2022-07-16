@@ -28,10 +28,10 @@ Button {
 
         opacity: if(emphasis){
             if(btnText.hovered){
-                if(btnText.down){1}else{0.8}
+                if(btnText.down){1}else{0.6}
             }else{1}
         }else{
-            if(btnText.down){0.8}else{1}
+            if(btnText.down){0.6}else{1}
         }
     }
 
