@@ -301,6 +301,7 @@ Item {
                 textBtn: "Valider"
                 textColor: colorHeadline
                 backgroundColor: colorHighlight
+                secondBackgroundColor: colorTertiary
                 emphasis: true
                 enabled: if(name_textfield.text === "" || from_textfield.text === "" || to_textfield.text === ""){false}else{true}
                 opacity: if(!enabled){0.4}else{1}

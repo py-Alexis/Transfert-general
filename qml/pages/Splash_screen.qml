@@ -106,6 +106,7 @@ Window {
 
         anchors.left: parent.left
         anchors.bottom: parent.bottom
+        indeterminate: false
         anchors.right: parent.right
         anchors.bottomMargin: 60
         anchors.leftMargin: 30
@@ -114,7 +115,7 @@ Window {
         background: Rectangle {
             color: colorBackgroundDark
             radius: 4
-         }
+        }
 
         contentItem: Item {
 
@@ -124,8 +125,20 @@ Window {
             Rectangle {
                 width: progressBar.visualPosition * parent.width
                 height: parent.height
-                radius: 2
                 color: colorHighlight
+                radius: 2
+                gradient: Gradient {
+                    orientation : Gradient.Horizontal
+                    GradientStop {
+                        position: 0
+                        color: colorHighlight
+                    }
+
+                    GradientStop {
+                        position: 3
+                        color: colorTertiary
+                    }
+                }
             }
         }
 
@@ -278,6 +291,8 @@ Window {
 
     }
 }
+
+
 
 
 

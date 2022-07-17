@@ -81,6 +81,19 @@ Item {
         color: if(checked){colorHighlight}else{colorBackgroundDark}
         radius: 20
 
+        gradient: Gradient {
+            GradientStop {
+                position: 0
+                color: if(checked){colorHighlight}else{colorBackgroundDark}
+            }
+
+            GradientStop {
+                position: 4
+                color: if(checked){colorTertiary}else{colorBackgroundDark}
+            }
+        }
+
+
     }
 
     Rectangle{
@@ -101,12 +114,24 @@ Item {
             anchors.leftMargin: 15
 
             color: background_rectangle.color
+
             anchors.verticalCenter: parent.verticalCenter
             opacity: if(mouse_area.pressed){0.5}else{background_rectangle.opacity}
             border.width: if(checked){0}else{1.5}
             border.color: colorParagraph
             radius: 5
 
+            gradient: Gradient {
+                GradientStop {
+                    position: 0
+                    color: if(checked){colorHighlight}else{colorBackgroundDark}
+                }
+
+                GradientStop {
+                    position: 5
+                    color: if(checked){colorTertiary}else{colorBackgroundDark}
+                }
+            }
             Image{
                 id: iconImage
                 source: "../../../images/svg_images/done.svg"
@@ -576,6 +601,7 @@ Item {
                 textBtn: "Valider"
                 textColor: colorHeadline
                 backgroundColor: colorHighlight
+                secondBackgroundColor: colorTertiary
                 emphasis: true
                 enabled: if(name_textfield.text === "" || from_textfield.text === "" || to_textfield.text === ""){false}else{true}
                 opacity: if(!enabled){0.4}else{1}

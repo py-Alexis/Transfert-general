@@ -10,6 +10,7 @@ Button {
 
     property color textColor: "#fffffe"
     property color backgroundColor: "#7f5af0"
+    property color secondBackgroundColor: "#242629"
 
     property bool emphasis: false
 
@@ -25,6 +26,19 @@ Button {
 
         border.color: textColor
         border.width: if(!emphasis){if(btnText.hovered){1.5}else{0}}else{0}
+
+        gradient: Gradient {
+            orientation : Gradient.Horizontal
+            GradientStop {
+                position: 0
+                color: if(emphasis){backgroundColor}else{'#00000000'}
+            }
+
+            GradientStop {
+                position: 4
+                color: if(emphasis){secondBackgroundColor}else{'#00000000'}
+            }
+        }
 
         opacity: if(emphasis){
             if(btnText.hovered){

@@ -49,14 +49,15 @@ Window {
 
         function createSettingsTarButton(ButtonName, activeTheme){
             // Creation of the TabButton String
-            var style = "contentItem: Text {color: parent.checked ? colorHeadline :colorParagraph;text: parent.text;font: parent.font;horizontalAlignment: Text.AlignHCenter;verticalAlignment: Text.AlignVCenter;}background: Rectangle{radius: 6; color: parent.checked ? colorHighlight: colorBackground;opacity: parent.down ? 0.75: 1;}"
+            var style = "contentItem: Text {color: parent.checked ? colorHeadline :colorParagraph;text: parent.text;font: parent.font;horizontalAlignment: Text.AlignHCenter;verticalAlignment: Text.AlignVCenter;}background: Rectangle{radius: 6; color:colorBackground;opacity: parent.down ? 0.75: 1;gradient: Gradient {orientation : Gradient.Horizontal;GradientStop{position: 0;color: if(checked){colorHighlight}else{colorBackground}}GradientStop{position: 4;color: if(checked){colorTertiary}else{colorBackground}}}}"
             var isActive = ButtonName === activeTheme ? true: false
-            var objectString = `import QtQuick 2.0; import QtQuick.Controls 2.13; TabButton {text: qsTr('${ButtonName}');z:2; checkable: tab_button_clickable;width:100; checked: ${isActive}; onClicked: main.change_theme(text); ${style}}`
+            var objectString = `import QtQuick 2.13; import QtQuick.Controls 2.13; TabButton {text: qsTr('${ButtonName}');z:2; checkable: tab_button_clickable;width:100; checked: ${isActive}; onClicked: main.change_theme(text); ${style}}`
 
             var newObject = Qt.createQmlObject(objectString,themeSelector,"tab_button"); // Creation of the tabButton
         }
     }
 
+//        gradient: Gradient {orientation : Gradient.Horizontal;GradientStop{position: 0;color: parent.checked ? colorHighlight: colorBackground;}GradientStop{position: 4;color: parent.checked ? colorTertiary: colorBackground;}}
     Rectangle {
         id: appContainer
         color: colorBackground

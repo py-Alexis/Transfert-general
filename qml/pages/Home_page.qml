@@ -89,6 +89,15 @@ Rectangle {
         font.bold: true
         font.pointSize: 27
 
+        LinearGradient  {
+            anchors.fill: copy_size
+            source: copy_size
+            gradient: Gradient {
+                orientation : Gradient.Horizontal
+                GradientStop { position: 0; color: colorHighlight }
+                GradientStop { position: 4; color: colorTertiary }
+            }
+        }
     }
 
     Label {
@@ -139,6 +148,7 @@ Rectangle {
         textBtn: "Valider"
         textColor: colorHeadline
         backgroundColor: colorHighlight
+        secondBackgroundColor: colorTertiary
         emphasis: true
         enabled: if(copy_size.text === "Rien " || !something_to_copy){false}else{true}
         opacity: if(!enabled){0.4}else{1}

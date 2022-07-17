@@ -65,6 +65,7 @@ def api_get_list_folders():
     # add size to copy key
     for folder in folders:
         if folders[folder]["from_valid"] and folders[folder]["to_valid"]:
+            # todo: actually check file by file for the size to backup because some file might be in the to folder but not in the from folder
             size_to_copy = folders[folder]["size"] - get_dir_size(folders[folder]["to"])
             total_size_to_copy += size_to_copy
             folders[folder]["size_to_copy"] = convert_size(size_to_copy)
