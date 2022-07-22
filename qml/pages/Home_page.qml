@@ -26,7 +26,6 @@ Rectangle {
     property var all_selections: []
     Shortcut{
         sequence: "Ctrl+N"
-
         onActivated:{
 
         }
@@ -163,6 +162,7 @@ Rectangle {
             for(var i = 0; i < selections.length; i++){
                 console.log(selections[i])
             }
+            stackView.push(stackView.replace(Qt.resolvedUrl("../pages/Copy_page.qml")))
         }
     }
 
