@@ -96,7 +96,6 @@ Window {
 
     UI_iconButton{
         property color color_button: colorBackgroundDark
-        onColor_buttonChanged: {console.log(color_button)}
 
         id: settings_button
         anchors.right: parent.right
@@ -130,11 +129,9 @@ Window {
 
             onActivated: {
                 company_mode = !company_mode
-                console.log(company_mode)
             }
         }
         onClicked: {
-        console.log(settings_button.anchors.rightMargin)
             if(settings_button.anchors.rightMargin === 5){
                 colorAnimationOpening.running = true;
             }else{

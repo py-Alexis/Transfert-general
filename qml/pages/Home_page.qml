@@ -22,6 +22,7 @@ Rectangle {
 //    property color colorStroke: "#010101"
     property bool reload_selections: true
     property bool destroy_selections: true
+    property var internal_folders: {}
     property var selections: []
     property var all_selections: []
     Shortcut{
@@ -158,11 +159,17 @@ Rectangle {
         anchors.bottomMargin: 20
 
         onClicked:{
-            // display selections
+            // create dictionary
+            var dict = {}
+
+            // append name as key and size as value
             for(var i = 0; i < selections.length; i++){
-                console.log(selections[i])
+                console.log(selections[i], internal_folders[selections[i]]["size"])
+                dict[selections[i]] = internal_folders[selections[i]]["size"]
             }
+
             stackView.push(stackView.replace(Qt.resolvedUrl("../pages/Copy_page.qml")))
+            main.create_bars(dict)
         }
     }
 
@@ -217,7 +224,7 @@ Rectangle {
         target: main
 
         function onSend_folders(folders){
-
+            internal_folders = folders
             for (const [key, value] of Object.entries(folders)) {
                 if(value["from_valid"] === true && value["to_valid"] === true){
                     all_selections.push(key)

@@ -223,6 +223,11 @@ class MainWindow(QObject):
         with open("settings/paths.json", "w", encoding="utf-8") as f:
             json.dump(paths, f, indent=4)
 
+    send_create_bars_signal = Signal("QVariant")
+    @Slot("QVariant")
+    def create_bars(self, dict):
+        self.send_create_bars_signal.emit(dict)
+
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine(parent=app)

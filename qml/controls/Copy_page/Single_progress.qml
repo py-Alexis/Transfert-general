@@ -10,9 +10,13 @@ import "../../controls/button"
 Rectangle {
     property int bar_height: 5
     property string name: "Name"
-    property int progression: 50
+    property int progression: 0
     property string total: "1 Go"
-    property string progression_text: "1Mo"
+    property string progression_text: "0Mo"
+    property bool percent: false
+
+    property bool destroy: true
+    onDestroyChanged: destroy()
 
     // color transparent
     color: "#00000000"
@@ -28,7 +32,7 @@ Rectangle {
     }
     Label{
         id: detail
-        text: total + "/" + progression_text
+        text: if(percent){progression_text}else{progression_text + "/" + total}
         anchors.bottom: name_label.bottom
         anchors.right: parent.right
         anchors.rightMargin: 10
