@@ -29,6 +29,12 @@ Rectangle {
         }
     }
 
+    Shortcut {
+        sequence: "Ctrl+H"
+
+        onActivated: console.log("Ctrl+H")
+    }
+
     color: colorBackground
     id: item1
 
@@ -81,6 +87,10 @@ Rectangle {
         anchors.left: rectangle.left
         anchors.bottom: parent.bottom
         anchors.bottomMargin: (80-height)/2
+
+        onClicked: {
+            main.cancel_copy()
+        }
     }
     Single_progress{
         id: total_progress
@@ -111,7 +121,10 @@ Rectangle {
                 var newObject = Qt.createQmlObject(objectString, selectionColumn, "bars");
             }
 
+        }
 
+        function onSignal_copy_finished(){
+            stackView.replace(Qt.resolvedUrl("../pages/Home_page.qml"))
         }
     }
 }

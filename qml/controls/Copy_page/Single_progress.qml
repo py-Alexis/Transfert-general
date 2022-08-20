@@ -77,4 +77,21 @@ Rectangle {
             }
         }
     }
+    Connections{
+        target: main
+
+        function onSignal_name_finished(name_){
+            if (name_ == name){
+                progression = 100
+                progression_text = total
+            }
+        }
+
+        function onSignal_percent(liste){
+            if (liste[0] == name){
+                progression = liste[1]
+                progression_text = liste[2]
+            }
+        }
+    }
 }

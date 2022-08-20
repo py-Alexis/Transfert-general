@@ -161,15 +161,20 @@ Rectangle {
         onClicked:{
             // create dictionary
             var dict = {}
+            var names = ''
+
 
             // append name as key and size as value
             for(var i = 0; i < selections.length; i++){
                 console.log(selections[i], internal_folders[selections[i]]["size"])
                 dict[selections[i]] = internal_folders[selections[i]]["size"]
+                names += selections[i] + "/"
+
             }
 
-            stackView.push(stackView.replace(Qt.resolvedUrl("../pages/Copy_page.qml")))
+            stackView.replace(Qt.resolvedUrl("../pages/Copy_page.qml"))
             main.create_bars(dict)
+            main.copy(names)
         }
     }
 

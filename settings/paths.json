@@ -10,5 +10,9 @@
     "TERM": {
         "from": "D:\\cours\\term",
         "to": "D:\\backup\\term"
+    },
+    "4 ème": {
+        "from": "D:\\cours\\4eme",
+        "to": "D:\\backup\\4eme_backup"
     }
 }

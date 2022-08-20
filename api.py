@@ -1,5 +1,7 @@
 import os
 import json
+import glob
+import shutil
 
 
 def get_dir_size(path='.'):
@@ -14,6 +16,46 @@ def get_dir_size(path='.'):
             elif entry.is_dir():
                 total += get_dir_size(entry.path)
     return total
+
+
+def get_size_diff(from_path, to_path):
+    """
+    return the size difference between the two paths
+    """
+
+    size_diff = 0
+    list_to_basename = os.listdir(to_path)
+
+    # scan the folder to get the list of files
+    for contenu in glob.glob(f"{from_path}/*"):
+        new_path = f"{to_path}/{os.path.basename(contenu)}"
+
+        if os.path.isdir(contenu):
+            if os.path.basename(contenu) in list_to_basename:
+                # if the folder already exist, we start again in this folder
+
+                size_diff += get_size_diff(contenu, new_path)
+
+            else:
+                # if the folder doesn't exist, we copy the folder
+                size_diff += get_dir_size(contenu)
+
+        else:
+            if os.path.basename(contenu) in list_to_basename:
+                # if the file already exist, we check if the new file is more recent
+
+                fichier_a_copier = os.path.getmtime(contenu)
+                fichier_deja_copier = os.path.getmtime(new_path)
+
+                if fichier_a_copier > fichier_deja_copier:
+                    # if the new file is more recent, we delete the old file and copy the new one
+                    size_diff += os.path.getsize(contenu)
+
+            else:
+                # if the file doesn't exist, we copy it (same process as before)
+                size_diff += os.path.getsize(contenu)
+
+    return size_diff
 
 
 def convert_size(byte):
@@ -65,14 +107,15 @@ def api_get_list_folders():
     # add size to copy key
     for folder in folders:
         if folders[folder]["from_valid"] and folders[folder]["to_valid"]:
-            # todo: actually check file by file for the size to backup because some file might be in the to folder but not in the from folder
-            size_to_copy = folders[folder]["size"] - get_dir_size(folders[folder]["to"])
+            size_to_copy = get_size_diff(folders[folder]["from"], folders[folder]["to"])
+            print(size_to_copy, folders[folder]["from"], folders[folder]["to"])
             total_size_to_copy += size_to_copy
             folders[folder]["size_to_copy"] = convert_size(size_to_copy)
         else:
             folders[folder]["size_to_copy"] = "-"
 
         if folders[folder]["from_valid"]:
+            folders[folder]["raw_size"] = folders[folder]["size"]
             folders[folder]["size"] = convert_size(folders[folder]["size"])
 
     # add a last copy key if it has never been copied
@@ -80,11 +123,13 @@ def api_get_list_folders():
         if "last_copy" not in folders[folder]:
             folders[folder]["last_copy"] = "Jamais"
 
-    return folders, convert_size(total_size_to_copy)
+    return folders, convert_size(total_size_to_copy), total_size_to_copy
 
 
 if __name__ == "__main__":
     # for folder in api_get_list_folders():
     #     print(folder, api_get_list_folders()[folder])
-    folders, size = api_get_list_folders()
-    print(size)
+    # folders, size = api_get_list_folders()
+    # print(size)
+    print(convert_size(get_size_diff("D:\\cours\\4eme", "D:\\backup\\4eme_backup")))
+    print(convert_size(get_dir_size("D:\\cours\\4eme") - get_dir_size("D:\\backup\\4eme_backup")))

@@ -1,16 +1,19 @@
 # This Python file uses the following encoding: utf-8
 import sys
-import os
+import os, glob, shutil
 import webbrowser
 import json
 import time
 import random
+from stat import S_IREAD, S_IRGRP, S_IROTH  # lecture seul
+from stat import S_IWUSR  # enlever la lecture seul
 
 from PySide2.QtCore import QObject, Slot, Signal, QThread
 from PySide2.QtGui import QGuiApplication, QIcon
 from PySide2.QtQml import QQmlApplicationEngine
 
 from api import api_get_list_folders
+from copy import Transfer, Transfer2
 
 
 def get_active_them():
@@ -84,23 +87,19 @@ class SlashScreen(QObject):
         self.thread.start()
 
     send_finished_signal = Signal()
-
     def finish(self):
         self.thread.quit()
         self.send_finished_signal.emit()
 
     send_percent_signal = Signal(int)
-
     def update_percent(self, percent):
         self.send_percent_signal.emit(percent)
 
     send_text_signal = Signal(str)
-
     def update_text(self, text):
         self.send_text_signal.emit(text)
 
     send_theme_info_signal = Signal("QVariant")
-
     @Slot(str)
     def change_theme(self, theme_name):
         """
@@ -118,6 +117,8 @@ class MainWindow(QObject):
     def __init__(self):
         QObject.__init__(self)
 
+        self.copy_thread = None
+
     # def startup(self):
     #     self.change_theme(get_active_them())
     #     self.send_theme_list()
@@ -128,7 +129,9 @@ class MainWindow(QObject):
     send_size = Signal(str)
     @Slot()
     def get_folders(self):
-        folders, size = api_get_list_folders()
+        print("get_folders")
+        folders, size, _ = api_get_list_folders()
+        print(folders)
         for folder in folders:
             folders[folder]["from"] = folders[folder]["from"].replace("\\", "/")
             folders[folder]["to"] = folders[folder]["to"].replace("\\", "/")
@@ -227,6 +230,57 @@ class MainWindow(QObject):
     @Slot("QVariant")
     def create_bars(self, dict):
         self.send_create_bars_signal.emit(dict)
+
+    # ==========================================================
+    # =============== copy related methods =====================
+    # ==========================================================
+    @Slot(str)
+    def copy(self, name):
+        # # setup the thread for the copy
+        # self.copy_thread = QThread(self)
+        # self.transfer = Transfer()
+        # self.transfer.moveToThread(self.copy_thread)
+        # self.copy_thread.started.connect(lambda: self.transfer.start_transfer(name))
+        # self.transfer.finished.connect(self.finish_copy)
+        # # self.transfer.percent.connect(self.update_percent)
+        #
+        # self.copy_thread.start()
+        self.copy_thread = QThread(self)
+        self.copy_sequence = Transfer(name.split("/")[:-1], api_get_list_folders()[0], api_get_list_folders()[2])
+        self.copy_sequence.moveToThread(self.copy_thread)
+        self.copy_thread.started.connect(self.copy_sequence.start_transfer)
+        self.copy_sequence.finished.connect(self.finish_copy)
+        self.copy_sequence.percent.connect(self.update_percent)
+        self.copy_sequence.finished_name.connect(self.finish_name_copy)
+        self.copy_thread.start()
+
+
+    signal_percent = Signal("QVariant")
+    def update_percent(self, liste):
+        self.signal_percent.emit(liste)
+
+
+    signal_copy_finished = Signal()
+    def finish_copy(self):
+        self.copy_thread.quit()
+        self.copy_thread = None
+
+        self.signal_copy_finished.emit()
+        self.get_folders()
+
+    signal_name_finished = Signal(str)
+    def finish_name_copy(self, name):
+        self.signal_name_finished.emit(name)
+
+    @Slot()
+    def cancel_copy(self):
+        print("cancel_copy")
+
+    @Slot()
+    def test(self):
+        print("test")
+
+
 
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)
