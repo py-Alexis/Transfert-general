@@ -1,18 +1,11 @@
 {
-    "PT": {
-        "from": "D:\\cours\\pt",
-        "to": "D:\\backup\\pt"
+    "4\u00e8me": {
+        "from": "C:\\[01] 4eme",
+        "to": "D:\\[01] 4eme",
+        "last_copy": 1691157585.639183
     },
-    "PTSI": {
-        "from": "D:\\cours\\PTSI",
-        "to": "D:\\backup\\PTSI"
-    },
-    "TERM": {
-        "from": "D:\\cours\\term",
-        "to": "D:\\backup\\term"
-    },
-    "4 ème": {
-        "from": "D:\\cours\\4eme",
-        "to": "D:\\backup\\4eme_backup"
+    "3\u00e8me": {
+        "from": "C:\\[02] 3eme",
+        "to": "D:\\[02] 3eme"
     }
 }

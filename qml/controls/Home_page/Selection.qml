@@ -61,7 +61,7 @@ Item {
     QtObject{
         id: internal
 
-        property bool compact: if((background_rectangle.width - (name_label.width + from_path_label.width)) > (980-550) ||(background_rectangle.width - (name_label.width + from_path_label.width)) > (940-550) ){true}else{false}
+        property bool compact: if((background_rectangle.width - (name_label.width + from_path_label.width)) > (980-500) ||(background_rectangle.width - (name_label.width + from_path_label.width)) > (940-500) ){true}else{false}
         property bool is_valid: if(from_path_is_valid && to_path_is_valid){true}else{false}
     }
 
@@ -177,7 +177,7 @@ Item {
             anchors.top: parent.top
             anchors.topMargin: 0
             anchors.bottom: parent.bottom
-            anchors.rightMargin: if(!company_mode){if(internal.compact){220}else{30}}else{if(internal.compact){190}else{0}}
+            anchors.rightMargin: if(!company_mode){if(internal.compact){300}else{30}}else{if(internal.compact){280}else{0}}
 
             Label{
                 id: from_label
@@ -276,6 +276,7 @@ Item {
             anchors.topMargin: 0
             anchors.bottom: parent.bottom
             anchors.leftMargin: 20
+
 
             Label{
                 id: size
@@ -612,7 +613,7 @@ Item {
                 anchors.bottomMargin: 20
 
                 onClicked: {
-                    main.create_path(name_textfield.text, from_textfield.text, to_textfield.text, true)
+                    main.create_path(name_textfield.text, from_textfield.text, to_textfield.text, true, name_label.text)
                     internal_home_page.destroy_and_reload_selections()
 
                     modify_dialog.reject()

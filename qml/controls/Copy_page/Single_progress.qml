@@ -89,6 +89,8 @@ Rectangle {
 
         function onSignal_percent(liste){
             if (liste[0] == name){
+                console.log(liste[1])
+                console.log(liste[2])
                 progression = liste[1]
                 progression_text = liste[2]
             }

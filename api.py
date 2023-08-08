@@ -2,6 +2,8 @@ import os
 import json
 import glob
 import shutil
+import datetime
+import re
 
 
 def get_dir_size(path='.'):
@@ -27,7 +29,8 @@ def get_size_diff(from_path, to_path):
     list_to_basename = os.listdir(to_path)
 
     # scan the folder to get the list of files
-    for contenu in glob.glob(f"{from_path}/*"):
+    for contenu in glob.glob(replace_brackets(f"{from_path}/*")):
+        print(contenu)
         new_path = f"{to_path}/{os.path.basename(contenu)}"
 
         if os.path.isdir(contenu):
@@ -110,6 +113,7 @@ def api_get_list_folders():
             size_to_copy = get_size_diff(folders[folder]["from"], folders[folder]["to"])
             print(size_to_copy, folders[folder]["from"], folders[folder]["to"])
             total_size_to_copy += size_to_copy
+            folders[folder]["raw_size_to_copy"] = size_to_copy
             folders[folder]["size_to_copy"] = convert_size(size_to_copy)
         else:
             folders[folder]["size_to_copy"] = "-"
@@ -122,14 +126,17 @@ def api_get_list_folders():
     for folder in folders:
         if "last_copy" not in folders[folder]:
             folders[folder]["last_copy"] = "Jamais"
+        else:
+            folders[folder]["last_copy"] = datetime.datetime.fromtimestamp(folders[folder]["last_copy"]).strftime("%d/%m/%y %H:%M")
 
     return folders, convert_size(total_size_to_copy), total_size_to_copy
 
 
+def replace_brackets(text):
+    """Replace [...] with [[]...[]] to make path work with glob.glob"""
+    return re.sub(r'\[([^\]]+)\]', r'[[]\1[]]', text)
+
+
 if __name__ == "__main__":
-    # for folder in api_get_list_folders():
-    #     print(folder, api_get_list_folders()[folder])
-    # folders, size = api_get_list_folders()
-    # print(size)
-    print(convert_size(get_size_diff("D:\\cours\\4eme", "D:\\backup\\4eme_backup")))
-    print(convert_size(get_dir_size("D:\\cours\\4eme") - get_dir_size("D:\\backup\\4eme_backup")))
+    pass
+# TODO: make a new glob.glob that include all files and folders while taking care of [

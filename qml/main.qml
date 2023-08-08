@@ -240,7 +240,7 @@ Window {
             width: (512 * height) / 139
             opacity: if(hovered){0.7}else{1}
 
-            onClicked: backend.open_github()
+            onClicked: main.open_github()
 
             background: Rectangle{
                 color: "transparent"
@@ -335,6 +335,7 @@ Window {
         function onSend_settings_signal(entreprise_mode){
             company_mode = entreprise_mode
         }
+
     }
 }
 

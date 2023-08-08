@@ -2,7 +2,7 @@ import os, shutil, glob
 from stat import S_IREAD, S_IRGRP, S_IROTH  # lecture seul
 from stat import S_IWUSR  # enlever la lecture seul
 import random
-
+from api import replace_brackets
 
 def create_test_folder(from_path, to_path):
     # delete folder
@@ -21,7 +21,7 @@ def randomize_folder(path):
      loop through all the files in the destination folder and randomly delete some of them
     """
 
-    for file in glob.glob(f"{path}/*"):
+    for file in glob.glob(replace_brackets(f"{path}/*")):
         if random.randint(0, 3) == 1:
             if os.path.isfile(file):
                 os.chmod(file, S_IWUSR | S_IREAD)
@@ -36,15 +36,13 @@ def randomize_folder(path):
                     os.utime(file, (os.path.getatime(file), os.path.getmtime(file)-1))
 
 
-
-
 def delete_folder(path):
     delete_all_file(path)
     shutil.rmtree(path)
 
 
 def delete_all_file(path):
-    for file in glob.glob(f"{path}/*"):
+    for file in glob.glob(replace_brackets(f"{path}/*")):
         if os.path.isfile(file):
             try:
                 os.chmod(file, S_IWUSR | S_IREAD)

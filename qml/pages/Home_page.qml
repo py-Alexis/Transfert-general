@@ -167,7 +167,7 @@ Rectangle {
             // append name as key and size as value
             for(var i = 0; i < selections.length; i++){
                 console.log(selections[i], internal_folders[selections[i]]["size"])
-                dict[selections[i]] = internal_folders[selections[i]]["size"]
+                dict[selections[i]] = internal_folders[selections[i]]["size_to_copy"]
                 names += selections[i] + "/"
 
             }

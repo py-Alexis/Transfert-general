@@ -35,33 +35,19 @@ class LoadingSequence(QObject):
         self.main_window = main_window
 
     def loading(self):
-        #     self.change_theme(get_active_them())
-        #     self.send_theme_list()
-        #     self.send_settings()
-        #     self.get_folders()
+        # TODO: have the progress bar more dynamic
 
         self.text.emit('Starting...')
 
         print(self.main_window)
+
         self.main_window.get_folders()
+
         time.sleep(random.randrange(1, 2))
-        # self.percent.emit(6)
-        # time.sleep(random.randrange(1, 2))
-        # self.percent.emit(16)
-        # time.sleep(random.randrange(1, 2))
-        # self.percent.emit(39)
-        #
-        # self.text.emit('Loading Theme...')
+
         self.main_window.change_theme(get_active_them())
-        # print("here")
         self.main_window.send_theme_list()
-        # print("no here")
-        # time.sleep(random.randrange(1, 2))
-        #
-        # self.percent.emit(83)
-        # self.text.emit('Loading Settings...')
-        # self.main_window.send_settings()
-        # time.sleep(random.randrange(1, 2))
+
         self.percent.emit(100)
 
         self.text.emit('...')
@@ -139,6 +125,7 @@ class MainWindow(QObject):
         self.send_folders.emit(folders)
         print(size)
         self.send_size.emit(size + " ")
+        print(folders)
 
     @Slot()
     def open_github(self):
@@ -192,8 +179,8 @@ class MainWindow(QObject):
             settings = json.load(f)
         self.send_settings_signal.emit(settings["company_mode"])
 
-    @Slot(str, str, str, bool)
-    def create_path(self, name, from_path, to_path, modify):
+    @Slot(str, str, str, bool, str)
+    def create_path(self, name, from_path, to_path, modify, old_name):
         """
         Create a path in the paths.json file.
         """
@@ -203,6 +190,9 @@ class MainWindow(QObject):
 
         if name in paths and modify is False:
             return False
+
+        if name != old_name:
+            del paths[old_name]
 
         paths[name] = {"from": from_path.replace('/', '\\'), "to": to_path.replace('/', '\\')}
 
@@ -254,11 +244,9 @@ class MainWindow(QObject):
         self.copy_sequence.finished_name.connect(self.finish_name_copy)
         self.copy_thread.start()
 
-
     signal_percent = Signal("QVariant")
     def update_percent(self, liste):
         self.signal_percent.emit(liste)
-
 
     signal_copy_finished = Signal()
     def finish_copy(self):
@@ -280,13 +268,15 @@ class MainWindow(QObject):
     def test(self):
         print("test")
 
-
+    @Slot()
+    def open_github(self):
+        print("open github")
 
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine(parent=app)
 
-    app.setWindowIcon(QIcon("images/svg_images/icon_app_top.svg"))
+    app.setWindowIcon(QIcon("images/icon/logo.svg"))
 
     # I don't know why but without it there are errors.
     app.setOrganizationName("Alexis MORICE")

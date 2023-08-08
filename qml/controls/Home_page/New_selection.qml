@@ -20,6 +20,7 @@ Item {
     //    property color colorStroke: "#010101"
 
     property bool destroy: true
+    property string old_name: ""
     onDestroyChanged: destroy()
 
     id: new_selection
@@ -314,7 +315,7 @@ Item {
                 onClicked: {
                     // if the name is not in the all_selections list create a selection
                     if(!all_selections.includes(name_textfield.text)){
-                        main.create_path(name_textfield.text, from_textfield.text, to_textfield.text, false)
+                        main.create_path(name_textfield.text, from_textfield.text, to_textfield.text, false, "")
                         internal_home_page.destroy_and_reload_selections()
 
                         new_selection_dialog.reject()

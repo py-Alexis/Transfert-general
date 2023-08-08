@@ -7,7 +7,7 @@ import random
 import json
 
 from PySide2.QtCore import QObject, Slot, Signal, QThread
-from api import convert_size, get_dir_size
+from api import convert_size, get_dir_size, replace_brackets
 import sys
 
 class Transfer2(QObject):
@@ -50,7 +50,7 @@ class Transfer2(QObject):
         list_to_basename = os.listdir(to_path)
 
         # scan the folder to get the list of files
-        for contenu in glob.glob(f"{from_path}/*"):
+        for contenu in glob.glob(replace_brackets(f"{from_path}/*")):
             new_path = f"{to_path}/{os.path.basename(contenu)}"
 
             if os.path.isdir(contenu):
@@ -126,6 +126,7 @@ class Transfer(QObject):
             try:
                 self.name_size_copy = 0
                 self.copy(self.folders[i]["from"], self.folders[i]["to"], i)
+                print("finished1")
             except Exception as e:
                 (type, value, traceback) = sys.exc_info()
                 print("=================================================")
@@ -133,14 +134,16 @@ class Transfer(QObject):
                 print(type, value, traceback)
             else:
                 # add last copy date to path.json
-                with open("path.json", "r", encoding="utf-8") as f:
+                with open("settings/paths.json", "r", encoding="utf-8") as f:
                     data = json.load(f)
                 data[i]["last_copy"] = time.time()
-                with open("path.json", "w", encoding="utf-8") as f:
+                with open("settings/paths.json", "w", encoding="utf-8") as f:
                     json.dump(data, f, indent=4)
             # self.percent.emit([i, y, "100Mo"])
+            print("finished2")
             self.finished_name.emit(i)
 
+        print("finished3")
         self.finished.emit()
 
     def copy(self, from_path, to_path, name):
@@ -161,7 +164,7 @@ class Transfer(QObject):
         list_to_basename = os.listdir(to_path)
 
         # scan the folder to get the list of files
-        for contenu in glob.glob(f"{from_path}/*"):
+        for contenu in glob.glob(replace_brackets(f"{from_path}/*")):
             new_path = f"{to_path}/{os.path.basename(contenu)}"
 
             if os.path.isdir(contenu):
@@ -178,7 +181,9 @@ class Transfer(QObject):
                     self.set_read_only(new_path)
 
                     self.name_size_copy += get_dir_size(new_path)
-                    self.percent.emit([name, int(self.name_size_copy/self.folders[name]["raw_size"]*100), convert_size(self.name_size_copy)])
+                    self.total_size_copy += get_dir_size(new_path)
+                    self.percent.emit([name, int(self.name_size_copy/self.folders[name]["raw_size_to_copy"]*100), convert_size(self.name_size_copy)])
+                    self.percent.emit(["Total", int(self.total_size_copy/self.total_size_to_copy*100), f"{int(self.total_size_copy/self.total_size_to_copy*100)} %"])
             else:
                 if os.path.basename(contenu) in list_to_basename:
                     # if the file already exist, we check if the new file is more recent
@@ -195,8 +200,10 @@ class Transfer(QObject):
                         shutil.copyfile(contenu, new_path)  # copy the new file
                         self.set_read_only(new_path)
                         self.name_size_copy += os.path.getsize(contenu)
-                        self.percent.emit([name, int(self.name_size_copy / self.folders[name]["raw_size"] * 100),
+                        self.total_size_copy += os.path.getsize(contenu)
+                        self.percent.emit([name, int(self.name_size_copy / self.folders[name]["raw_size_to_copy"] * 100),
                                            convert_size(self.name_size_copy)])
+                        self.percent.emit(["Total", int(self.total_size_copy/self.total_size_to_copy*100), f"{int(self.total_size_copy/self.total_size_to_copy*100)} %"])
 
                         # when we copy the file the modification date is updated, so we set it to what it was before
                         os.utime(new_path, (os.path.getatime(contenu), os.path.getmtime(contenu)))
@@ -209,7 +216,9 @@ class Transfer(QObject):
                     self.set_read_only(new_path)
                     os.utime(new_path, (os.path.getatime(contenu), os.path.getmtime(contenu)))
                     self.name_size_copy += os.path.getsize(contenu)
-                    self.percent.emit([name, int(self.name_size_copy/self.folders[name]["raw_size"]*100), convert_size(self.name_size_copy)])
+                    self.total_size_copy += os.path.getsize(contenu)
+                    self.percent.emit([name, int(self.name_size_copy/self.folders[name]["raw_size_to_copy"]*100), convert_size(self.name_size_copy)])
+                    self.percent.emit(["Total", int(self.total_size_copy/self.total_size_to_copy*100), f"{int(self.total_size_copy/self.total_size_to_copy*100)} %"])
 
     def set_read_only(self, path):
         """
