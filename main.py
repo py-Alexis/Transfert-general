@@ -117,15 +117,12 @@ class MainWindow(QObject):
     def get_folders(self):
         print("get_folders")
         folders, size, _ = api_get_list_folders()
-        print(folders)
         for folder in folders:
             folders[folder]["from"] = folders[folder]["from"].replace("\\", "/")
             folders[folder]["to"] = folders[folder]["to"].replace("\\", "/")
 
         self.send_folders.emit(folders)
-        print(size)
         self.send_size.emit(size + " ")
-        print(folders)
 
     @Slot()
     def open_github(self):
@@ -184,6 +181,7 @@ class MainWindow(QObject):
         """
         Create a path in the paths.json file.
         """
+        print(name, from_path, to_path, modify, old_name)
 
         with open("settings/paths.json", "r", encoding="utf-8") as f:
             paths = json.load(f)
@@ -191,7 +189,9 @@ class MainWindow(QObject):
         if name in paths and modify is False:
             return False
 
-        if name != old_name:
+        if name == old_name or modify is False:
+            pass
+        else:
             del paths[old_name]
 
         paths[name] = {"from": from_path.replace('/', '\\'), "to": to_path.replace('/', '\\')}
